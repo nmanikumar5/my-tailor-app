@@ -4,7 +4,15 @@
 
 ### Backend API Testing
 
-1. **Start the backend server:**
+1. **Start MongoDB (using Docker - recommended):**
+   ```bash
+   # From the project root directory
+   docker compose up -d mongodb
+   ```
+   
+   **Alternative**: Install MongoDB locally or use MongoDB Atlas
+
+2. **Start the backend server:**
    ```bash
    cd backend
    npm run dev
@@ -105,8 +113,12 @@ const API_BASE_URL = 'http://localhost:5000/api';
    - For Android emulator: use `http://10.0.2.2:5000/api`
 
 2. **MongoDB connection failed:**
-   - Install and start MongoDB locally
-   - Or use MongoDB Atlas cloud database
+   - **Recommended**: Use Docker to start MongoDB:
+     ```bash
+     docker compose up -d mongodb
+     ```
+   - **Alternative 1**: Install and start MongoDB locally
+   - **Alternative 2**: Use MongoDB Atlas cloud database and update `MONGODB_URI` in `.env`
 
 3. **OTP not received:**
    - In development, OTP is logged to backend console

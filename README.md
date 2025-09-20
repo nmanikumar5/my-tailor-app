@@ -2,6 +2,34 @@
 
 A comprehensive mobile application connecting customers with tailors and boutiques, built with React Native and Node.js.
 
+## 🚀 Quick Start
+
+### Backend Development Setup
+
+1. **Start MongoDB:**
+   ```bash
+   npm run dev:db
+   ```
+
+2. **Start Backend Server:**
+   ```bash
+   npm run dev:backend
+   ```
+
+   The backend API will be available at `http://localhost:5000`
+
+3. **When done developing:**
+   ```bash
+   npm run dev:db:stop
+   ```
+
+### Requirements
+- **Node.js**: v16 or higher
+- **Docker**: For MongoDB (recommended)
+- **React Native CLI**: For mobile development
+
+For detailed setup instructions, see [DEVELOPMENT.md](./DEVELOPMENT.md)
+
 ## 🚀 Features Implemented
 
 ### ✅ Complete Authentication System
