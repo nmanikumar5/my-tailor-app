@@ -167,9 +167,7 @@ const userSchema = new Schema({
 });
 
 // Indexes
-userSchema.index({ phoneNumber: 1 });
-userSchema.index({ email: 1 });
-userSchema.index({ googleId: 1 });
+// Note: phoneNumber, email, and googleId indexes are automatically created by 'unique' and 'sparse' properties
 userSchema.index({ role: 1 });
 userSchema.index({ 'location.coordinates': '2dsphere' });
 
