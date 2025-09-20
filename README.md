@@ -5,6 +5,7 @@ This is a new [**React Native**](https://reactnative.dev) project with TypeScrip
 ## Project Structure
 
 The project includes a `/src` directory with organized folders for:
+
 - `components/` - Reusable UI components
 - `screens/` - Screen components for navigation
 - `services/` - API calls and external services
