@@ -7,9 +7,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
+import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../theme';
 
 type LoginScreenNavigationProp = StackNavigationProp<
@@ -23,15 +25,31 @@ interface Props {
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const { theme } = useTheme();
+  const { sendOTP } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePhoneLogin = () => {
+  const handlePhoneLogin = async () => {
     if (phoneNumber.length < 10) {
       Alert.alert('Error', 'Please enter a valid phone number');
       return;
     }
-    // TODO: API call to send OTP
-    navigation.navigate('OTP', { phoneNumber });
+
+    setIsLoading(true);
+    try {
+      const response = await sendOTP(phoneNumber);
+      
+      if (response.success) {
+        Alert.alert('Success', response.message || 'OTP sent successfully');
+        navigation.navigate('OTP', { phoneNumber });
+      } else {
+        Alert.alert('Error', response.message || 'Failed to send OTP');
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -59,12 +77,18 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             onChangeText={setPhoneNumber}
             keyboardType="phone-pad"
             maxLength={15}
+            editable={!isLoading}
           />
 
           <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={handlePhoneLogin}>
-            <Text style={styles.primaryButtonText}>Send OTP</Text>
+            style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
+            onPress={handlePhoneLogin}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator size="small" color={theme.colors.white} />
+            ) : (
+              <Text style={styles.primaryButtonText}>Send OTP</Text>
+            )}
           </TouchableOpacity>
 
           <View style={styles.divider}>
@@ -74,8 +98,9 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           </View>
 
           <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={handleGoogleLogin}>
+            style={[styles.secondaryButton, isLoading && styles.buttonDisabled]}
+            onPress={handleGoogleLogin}
+            disabled={isLoading}>
             <Text style={styles.secondaryButtonText}>Continue with Google</Text>
           </TouchableOpacity>
         </View>
@@ -138,6 +163,9 @@ const createStyles = (theme: any) =>
       color: theme.colors.white,
       fontSize: 16,
       fontWeight: '600',
+    },
+    buttonDisabled: {
+      opacity: 0.6,
     },
     divider: {
       flexDirection: 'row',

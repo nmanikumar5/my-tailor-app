@@ -7,10 +7,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
+import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../theme';
 
 type OTPScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'OTP'>;
@@ -23,8 +25,11 @@ interface Props {
 
 const OTPScreen: React.FC<Props> = ({ navigation, route }) => {
   const { theme } = useTheme();
+  const { verifyOTP, sendOTP } = useAuth();
   const { phoneNumber } = route.params;
   const [otp, setOTP] = useState(['', '', '', '', '', '']);
+  const [isLoading, setIsLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const inputRefs = useRef<TextInput[]>([]);
 
   const handleOTPChange = (value: string, index: number) => {
@@ -45,19 +50,52 @@ const OTPScreen: React.FC<Props> = ({ navigation, route }) => {
     }
   };
 
-  const handleVerifyOTP = () => {
+  const handleVerifyOTP = async () => {
     const otpString = otp.join('');
     if (otpString.length !== 6) {
       Alert.alert('Error', 'Please enter complete OTP');
       return;
     }
-    // TODO: API call to verify OTP
-    navigation.navigate('Onboarding');
+
+    setIsLoading(true);
+    try {
+      const response = await verifyOTP(phoneNumber, otpString);
+      
+      if (response.success) {
+        const { user } = response.data;
+        
+        // Check if user needs onboarding
+        if (user.needsOnboarding) {
+          navigation.navigate('Onboarding');
+        }
+        // Navigation to main app is handled by AppNavigator based on auth state
+      } else {
+        Alert.alert('Error', response.message || 'OTP verification failed');
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResendOTP = () => {
-    // TODO: API call to resend OTP
-    Alert.alert('Success', 'OTP sent again');
+  const handleResendOTP = async () => {
+    setResendLoading(true);
+    try {
+      const response = await sendOTP(phoneNumber);
+      
+      if (response.success) {
+        Alert.alert('Success', 'OTP sent again');
+        // Clear current OTP
+        setOTP(['', '', '', '', '', '']);
+      } else {
+        Alert.alert('Error', response.message || 'Failed to resend OTP');
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to resend OTP');
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   const styles = createStyles(theme);
@@ -84,20 +122,32 @@ const OTPScreen: React.FC<Props> = ({ navigation, route }) => {
               keyboardType="numeric"
               maxLength={1}
               textAlign="center"
+              editable={!isLoading}
             />
           ))}
         </View>
 
         <TouchableOpacity
-          style={styles.primaryButton}
-          onPress={handleVerifyOTP}>
-          <Text style={styles.primaryButtonText}>Verify OTP</Text>
+          style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
+          onPress={handleVerifyOTP}
+          disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={theme.colors.white} />
+          ) : (
+            <Text style={styles.primaryButtonText}>Verify OTP</Text>
+          )}
         </TouchableOpacity>
 
         <View style={styles.resendContainer}>
           <Text style={styles.resendText}>Didn't receive code? </Text>
-          <TouchableOpacity onPress={handleResendOTP}>
-            <Text style={styles.resendLink}>Resend</Text>
+          <TouchableOpacity 
+            onPress={handleResendOTP}
+            disabled={resendLoading}>
+            {resendLoading ? (
+              <ActivityIndicator size="small" color={theme.colors.primary} />
+            ) : (
+              <Text style={styles.resendLink}>Resend</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -156,6 +206,9 @@ const createStyles = (theme: any) =>
       color: theme.colors.white,
       fontSize: 16,
       fontWeight: '600',
+    },
+    buttonDisabled: {
+      opacity: 0.6,
     },
     resendContainer: {
       flexDirection: 'row',

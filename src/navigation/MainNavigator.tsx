@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useAuth } from '../contexts/AuthContext';
 import TailorNavigator from './TailorNavigator';
 import CustomerNavigator from './CustomerNavigator';
 
@@ -11,8 +12,8 @@ export type MainTabParamList = {
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const MainNavigator: React.FC = () => {
-  // TODO: Get user role from auth context
-  const userRole = 'customer'; // 'customer' | 'tailor'
+  const { user } = useAuth();
+  const userRole = user?.role || 'customer';
 
   return (
     <Tab.Navigator
