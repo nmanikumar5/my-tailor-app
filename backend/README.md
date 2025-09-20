@@ -27,10 +27,13 @@ RESTful API backend for the TailorApp mobile application, built with Node.js, Ex
 ### Prerequisites
 
 - Node.js (v16 or higher)
-- MongoDB (local or cloud instance)
+- Docker and Docker Compose (recommended for development)
+- MongoDB (local, Docker, or cloud instance)
 - Twilio account (for SMS functionality)
 
-### Installation
+### Quick Start with Docker
+
+The easiest way to get started in development is using Docker Compose to run MongoDB:
 
 1. Install dependencies:
    ```bash
@@ -43,10 +46,29 @@ RESTful API backend for the TailorApp mobile application, built with Node.js, Ex
    # Edit .env with your configuration
    ```
 
-3. Start the development server:
+3. Start MongoDB with Docker:
+   ```bash
+   # From the project root directory
+   docker compose up -d mongodb
+   ```
+
+4. Start the development server:
    ```bash
    npm run dev
    ```
+
+5. Stop MongoDB when done:
+   ```bash
+   # From the project root directory
+   docker compose down
+   ```
+
+### Alternative MongoDB Setup
+
+If you prefer not to use Docker:
+
+- **Local MongoDB**: Install MongoDB locally and start the service
+- **MongoDB Atlas**: Use a cloud MongoDB instance and update `MONGODB_URI` in `.env`
 
 4. Start the production server:
    ```bash

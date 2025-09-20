@@ -7,7 +7,11 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "dev:db": "docker compose up -d mongodb",
+    "dev:db:stop": "docker compose down",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:setup": "docker compose up -d mongodb && cd backend && npm install && npm run dev"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
