@@ -1,109 +1,164 @@
 # TailorApp
 
-This is a new [**React Native**](https://reactnative.dev) project with TypeScript, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+A comprehensive mobile application connecting customers with tailors and boutiques, built with React Native and Node.js.
 
-## Project Structure
+## 🚀 Features Implemented
 
-The project includes a `/src` directory with organized folders for:
-- `components/` - Reusable UI components
-- `screens/` - Screen components for navigation
-- `services/` - API calls and external services
-- `utils/` - Utility functions and helpers
-- `types/` - TypeScript type definitions
-- `navigation/` - Navigation configuration
+### ✅ Complete Authentication System
+- **Phone/OTP Authentication**: Secure phone number verification with OTP
+- **User Onboarding**: Role selection (Customer/Tailor) with profile completion
+- **JWT Token Management**: Secure authentication with automatic token refresh
+- **Persistent Login**: Users stay logged in across app restarts
+- **Role-based Navigation**: Different app flows for customers and tailors
 
-# Getting Started
+### ✅ Frontend Foundation
+- **React Native + TypeScript**: Type-safe mobile development
+- **React Navigation**: Stack and tab navigation with authentication flow
+- **Theming System**: Light/dark mode with TailorApp brand colors
+- **State Management**: React Context for authentication and theme
+- **Responsive UI**: Modern, accessible design components
+- **Form Validation**: Client-side validation with loading states
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+### ✅ Backend Foundation
+- **Node.js + Express**: RESTful API with ES modules
+- **MongoDB + Mongoose**: Document database with user management
+- **Authentication Middleware**: JWT-based auth with role permissions
+- **Security Features**: Rate limiting, CORS, input validation, helmet
+- **SMS Integration**: OTP delivery via Twilio (configurable)
+- **Environment Management**: Secure configuration handling
 
-## Step 1: Start Metro
+## 🏗️ Architecture
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+### Frontend (`/`)
+```
+src/
+├── components/          # Reusable UI components (ready)
+├── contexts/           # React Context providers
+├── navigation/         # React Navigation setup
+├── screens/           # Screen components
+├── services/          # API integration services
+├── theme/             # Theming system
+├── types/             # TypeScript definitions (ready)
+└── utils/             # Utility functions (ready)
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+### Backend (`/backend`)
+```
+src/
+├── config/            # Environment & database config
+├── controllers/       # Route controllers
+├── middleware/        # Auth, validation, error handling
+├── models/           # MongoDB/Mongoose models
+├── routes/           # Express routes
+├── services/         # Business logic services
+└── utils/            # Validation schemas & helpers
 ```
 
-### iOS
+## 🔧 Getting Started
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+### Prerequisites
+- Node.js (v16+)
+- React Native development environment
+- MongoDB (local or cloud)
+- Twilio account (optional, for SMS)
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+### Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Edit .env with your configuration
+npm run dev  # Development server
+npm start    # Production server
 ```
 
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
+### Frontend Setup
+```bash
+npm install
+npm start    # Metro bundler
+npm run android  # Android app
+npm run ios      # iOS app
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 📱 Authentication Flow
 
-```sh
-# Using npm
-npm run ios
+1. **Phone Login**: User enters phone number
+2. **OTP Verification**: 6-digit code sent via SMS (logged in dev mode)
+3. **Onboarding**: Name, role selection, business details (for tailors)
+4. **Dashboard**: Role-based navigation to appropriate features
 
-# OR using Yarn
-yarn ios
-```
+## 🎨 User Roles
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Customer Features (UI Ready)
+- Browse tailors and fabrics
+- Manage measurements
+- Place orders
+- Track order status
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Tailor/Boutique Features (UI Ready)
+- Dashboard with subscription management
+- Customer management
+- Fabric inventory management
+- Order processing
 
-## Step 3: Modify your app
+## 🔐 API Endpoints
 
-Now that you have successfully run the app, let's make changes!
+### Authentication (`/api/auth`)
+- `POST /send-otp` - Send verification code
+- `POST /verify-otp` - Verify code and login
+- `POST /onboarding` - Complete user profile
+- `GET /profile` - Get current user
+- `PUT /profile` - Update user profile
+- `POST /logout` - Logout user
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### Health Check
+- `GET /health` - API status
+- `GET /api/auth/health` - Auth service status
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 🛠️ Development
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### Frontend Scripts
+- `npm start` - Start Metro bundler
+- `npm test` - Run Jest tests
+- `npm run lint` - ESLint checks
+- `npm run android` - Build Android
+- `npm run ios` - Build iOS
 
-## Congratulations! :tada:
+### Backend Scripts
+- `npm run dev` - Development with nodemon
+- `npm start` - Production server
+- `npm run lint` - ESLint checks
+- `npm run format` - Prettier formatting
 
-You've successfully run and modified your React Native App. :partying_face:
+## 🧪 Testing
 
-### Now what?
+- **Frontend**: Jest + React Native Testing Library
+- **Mocking**: Navigation, AsyncStorage, API calls
+- **Backend**: Ready for unit and integration tests
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 🔒 Security Features
 
-# Troubleshooting
+- JWT authentication with configurable expiration
+- Rate limiting on sensitive endpoints
+- Input validation and sanitization
+- Password hashing with bcrypt
+- CORS configuration
+- Helmet security headers
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## 🚀 Next Steps
 
-# Learn More
+The foundation is complete! Ready for implementing:
 
-To learn more about React Native, take a look at the following resources:
+1. **Core Features**: Fabric management, measurements, orders
+2. **Real-time Features**: Chat system, notifications
+3. **Location Services**: Nearby tailors, delivery tracking
+4. **Payment Integration**: Subscription management, order payments
+5. **Advanced Features**: AI measurements, AR try-on
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 📄 License
+
+MIT License - see LICENSE file for details
+
+---
+
+**Status**: ✅ Authentication system fully functional with end-to-end integration between React Native frontend and Node.js backend.
